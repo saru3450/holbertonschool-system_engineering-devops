@@ -59,8 +59,21 @@ The **domain name** (e.g., `www.foobar.com`) provides a **human-readable address
 
 ## 4. Design Diagram (Simplified Flow)
 
-```plaintext
-User (Browser) -> DNS resolves www.foobar.com -> Server IP (8.8.8.8)
-   -> Web Server (Nginx)
-      -> Application Server
-         -> Application Code + Database (MySQL)
+```mermaid
+graph TD
+    User["User (Browser)"]
+    DNS["DNS Server"]
+    DomainName["Domain Name: www.foobar.com"]
+    ServerIP["Server IP: 8.8.8.8"]
+    WebServer["Web Server (Nginx)"]
+    AppServer["Application Server (PHP)"]
+    Database["Database (MySQL)"]
+    AppCode["Application Code"]
+
+    User --> DNS
+    DNS --> DomainName
+    DomainName --> ServerIP
+    ServerIP --> WebServer
+    WebServer --> AppServer
+    AppServer --> AppCode
+```

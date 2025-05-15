@@ -59,6 +59,57 @@
 3. **Redundancy**:
    - Load Balancer clustering prevents downtime.
 
+## Architecture Overview
+```mermaid
+graph TD
+    %% Load Balancer Cluster
+    subgraph Load_Balancer_Cluster["Load Balancer Cluster"]
+        LB1["Load Balancer 1 (HAProxy)"]
+        LB2["Load Balancer 2 (HAProxy)"]
+        LB1 -- heartbeat --> LB2
+    end
+
+    %% Web Servers
+    subgraph Web_Servers["Web Servers"]
+        WS1["Web Server 1 (Nginx)"]
+        WS2["Web Server 2 (Nginx)"]
+        WS3["Web Server 3 (Nginx)"]
+    end
+
+    %% Application Servers
+    subgraph Application_Servers["Application Servers"]
+        App1["Application Server 1"]
+        App2["Application Server 2"]
+        App3["Application Server 3"]
+    end
+
+    %% Database Cluster
+    subgraph Database_Cluster["Database Cluster"]
+        DBPrimary["Primary MySQL Server"]
+        DBReplica1["Replica MySQL Server 1"]
+        DBReplica2["Replica MySQL Server 2"]
+    end
+
+    %% Connections
+    LB1 --> WS1
+    LB1 --> WS2
+    LB1 --> WS3
+    LB2 --> WS1
+    LB2 --> WS2
+    LB2 --> WS3
+
+    WS1 --> App1
+    WS2 --> App2
+    WS3 --> App3
+
+    App1 --> DBPrimary
+    App2 --> DBPrimary
+    App3 --> DBPrimary
+
+    DBPrimary --> DBReplica1
+    DBPrimary --> DBReplica2
+```
+
 ## Recommendations
 
 1. Monitor inter-server communication to identify bottlenecks.

@@ -51,3 +51,40 @@
 2. Add a failover mechanism for the Primary Database to prevent write disruptions.
 3. Separate server roles to improve specialization and avoid resource contention.
 4. Integrate proactive monitoring tools like Prometheus and Grafana for better visibility.
+
+```mermaid
+graph TD
+    subgraph Load_Balancer_Cluster["Load Balancer Cluster"]
+        LB1["Load Balancer 1 (HAProxy)"]
+        LB2["Load Balancer 2 (HAProxy)"]
+        LB1 -- heartbeat --> LB2
+    end
+
+    subgraph Web_Servers["Web Servers"]
+        WS1["Web Server 1 (Nginx)"]
+        WS2["Web Server 2 (Nginx)"]
+    end
+
+    subgraph Application_Servers["Application Servers"]
+        App1["Application Server 1"]
+        App2["Application Server 2"]
+    end
+
+    subgraph Database_Cluster["Database Cluster"]
+        DBPrimary["Primary MySQL Server"]
+        DBReplica1["Replica MySQL Server 1"]
+        DBReplica2["Replica MySQL Server 2"]
+    end
+
+    %% Connections
+    LB1 --> WS1
+    LB1 --> WS2
+    LB2 --> WS1
+    LB2 --> WS2
+    WS1 --> App1
+    WS2 --> App2
+    App1 --> DBPrimary
+    App2 --> DBPrimary
+    DBPrimary --> DBReplica1
+    DBPrimary --> DBReplica2
+```
