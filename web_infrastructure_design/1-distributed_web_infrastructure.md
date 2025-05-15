@@ -1,5 +1,39 @@
 # Distributed Web Infrastructure for www.foobar.com
 
+## Infrastructure Diagram  
+```mermaid
+graph TD
+    %% Load Balancer
+    LB["Load Balancer (HAProxy)"]
+
+    %% Server 1
+    subgraph Server1["Server 1"]
+        WS1["Web Server 1 (Nginx)"]
+        App1["Application Server 1"]
+        DB1["Database 1 (MySQL - Primary)"]
+        CodeBase1["Application Files"]
+    end
+
+    %% Server 2
+    subgraph Server2["Server 2"]
+        WS2["Web Server 2 (Nginx)"]
+        App2["Application Server 2"]
+        DB2["Database 2 (MySQL - Replica)"]
+        CodeBase2["Application Files"]
+    end
+
+    %% Connections
+    LB --> WS1
+    LB --> WS2
+
+    WS1 --> App1
+    WS2 --> App2
+
+    App1 --> DB1
+    App2 --> DB1
+    DB1 --> DB2
+```
+
 ## Components
 
 1. **Load Balancer (HAProxy)**
